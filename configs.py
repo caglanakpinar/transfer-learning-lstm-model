@@ -46,4 +46,29 @@ _row = {'day': None, 'hour': None, 'store': None,
         'ratios': None, 'login': None,
         'basket': None, 'payment': None}
 
-model_parameters = ['tsteps', 'lahead', 'input_shape', 'inputs', 'output_shape', 'output', 'test_input', 'test_output']
+### hyper parameters
+parameters = {
+              'tsteps': 1, 'lahead': 5, 'batch_size': 60 - 5 + 1,
+              }
+### hyper parameters
+model_params = {
+              'split_ratio': 0.8,
+              'lstm_parameters': {
+                  'tsteps': 1, 'lahead': 5, 'batch_size': 60,
+                  'units': 30, 'l1': 0.01, 'l2': 0.02, 'loss': 0.01,
+                  'activation': 'tanh'
+              },
+              'cat_features': {
+                  'batch_size': 60, 'auto_encoder_units': [60, 30 , 60],
+                  'l1': 0.01, 'l2': 0.02, 'loss': 0.01,
+                  'auto_encoder_activation': ['relu', 'relu', 'sigmoid']
+              },
+              'output_feature': {
+                  'batch_size': 60, 'activation': 'sigmoid',
+              }
+}
+
+split_ratio = 0.2
+lstm_features = ['basket', 'login', 'payment', 'ratio']
+output = ['close']
+cat_features = ['hour', 'day']
