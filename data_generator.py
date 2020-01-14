@@ -47,7 +47,7 @@ def open_close(ratios):
 def ratio_calculation(metrics, ratios):
     result = 1
     for i in range(len(metrics)):
-        result *= list(filter(lambda x: x[0] == metrics[i], ratios[i]))[0][1]
+        result *= list(filter(lambda x: x[0] == metrics[i], ratios))[0][1]
     return get_range_of_ratios(result)
 
 
@@ -68,7 +68,7 @@ class RandomDataGenerator:
         self.metrics = metrics
         self.ratio_metrics = ['days', 'hours', 'stores']
         self.model_features = model_features
-        self.busy_ratios = None
+        self.busy_ratios = []
         self.patterns = []
         self.features = []
         self.sample = _row
@@ -77,12 +77,16 @@ class RandomDataGenerator:
 
     def get_busy_ratios(self):
         for f in self.model_features:
+            print(f)
             count = 0
             for r in self.model_features[f]:
-                self.busy_ratios.append({r: list(zip(self.metrics.stores,
+                if r != '_ratios':
+                    self.busy_ratios += list(zip(self.metrics[self.ratio_metrics[count]],
                                                      [random.sample(self.model_features[f][r], 1)[0]
-                                                      for i in self.metrics[self.ratio_metrics[count]]]))})
+                                                      for i in self.metrics[self.ratio_metrics[count]]]))
+
                 count += 1
+        print("ok")
 
     def get_patterns(self):
         for i in range(10):
@@ -90,7 +94,7 @@ class RandomDataGenerator:
 
     def get_day_store_hour_ratios(self, w, h, s):
         for f in self.model_features:
-            self.model_features[f]['_ratio']['w_h_s_ratios'] = ratio_calculation([w, h, s], [self.busy_ratios[r] for r in self.busy_ratios])
+            self.model_features[f]['_ratio']['w_h_s_ratios'] = ratio_calculation([w, h, s], self.busy_ratios)
 
     def get_min_ratios(self, pattern, w, h, s):
         self.sample['day'], self.sample['hour'], self.sample['store'] = w, h, s
