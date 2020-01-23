@@ -26,7 +26,7 @@ def compute_one_hot_encoding(df, cat_features, is_droping):
 
 
 class DataPreparation:
-    def __index__(self):
+    def __init__(self):
         self.files_prepared_data = listdir(os.path.abspath("data/"))
         self.metrics = metrics
         self.ratio_metrics = ['days', 'hours', 'stores']
@@ -74,27 +74,13 @@ class DataPreparation:
         self._x_train = self._x if self._x_train is None else np.concatenate([self._x_train, self._x], axis=0)
         self._y_train = self._y if self._y_train is None else np.concatenate([self._y_train, self._y], axis=0)
 
-        def data_preparation(data_input, params):
-            tsteps, lahead = params['tsteps'], params['lahead']
-            expected_output = data_input.rolling(window=tsteps, center=False).mean()
-            if lahead > 1:
-                data_input = np.repeat(data_input.values, repeats=lahead, axis=1)
-                data_input = pd.DataFrame(data_input)
-                for i, c in enumerate(data_input.columns):
-                    data_input[c] = data_input[c].shift(i)
-            to_drop = max(tsteps - 1, lahead - 1)
-            # drop the nan
-            expected_output = expected_output[to_drop:]
-            data_input = data_input[to_drop:]
-            return data_input.values, expected_output.values
-
     def compute_one_hot_encoding(self, f):
         self._x_train = compute_one_hot_encoding(pd.DataFrame(self._x_train).rename(columns={0: f}), f, True).values
 
     def generate_data_for_model(self):
         for f in self.lstm_features + self.cat_features + self.output:
-            print("feature :", l, "*" * 20)
-            for s in self.metrics[self.ratio_metrics[3]]:
+            print("feature :", f, "*" * 20)
+            for s in self.metrics[self.ratio_metrics[2]]:
                 print("store :", s)
                 self.file_name = "train_data_{}_{}.json".format(f, s)
                 if self.file_name not in self.files_prepared_data:

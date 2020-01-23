@@ -8,6 +8,7 @@ from data_generator import RandomDataGenerator
 
 def get_data():
     files_prepared_data = listdir(os.path.abspath("data"))
+
     if files_prepared_data == []:
       print(" Data not found random dat generator will be started!!!")
       random_data_generator = RandomDataGenerator()

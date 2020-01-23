@@ -3,3 +3,8 @@
 *.xml
 *.iml
 *.pyc
+*.csv
+.DS_Store
+.DS_Store
+.DS_Store
+*.json

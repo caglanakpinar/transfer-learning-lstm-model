@@ -12,26 +12,26 @@ model_features = {'ratios': {
                                 'd_ratios': list(np.arange(0.75, 1, 0.005)),
                                 'h_ratios': list(np.arange(0.75, 1, 0.005)),
                                 's_ratios': list(np.arange(0.75, 1, 0.005)),
-                                '_ratios': {'w_h_s_ratio': {'w_h_s_ratio': None, 'min_ratio': None}}
+                                '_ratios': {'w_h_s_ratio': None}
                              },
                     'login': {
                               'd_ratios': list(np.arange(0.05, 0.75, 0.005)),
                               'h_ratios': list(np.arange(0.05, 0.75, 0.005)),
                               's_ratios': list(np.arange(0.05, 0.75, 0.005)),
-                              '_ratios': {'w_h_s_ratio': {'w_h_s_ratio': None, 'min_ratio': None}}
+                              '_ratios': {'w_h_s_ratio': None}
                              },
 
                     'basket': {
                                'd_ratios': list(np.arange(0.05, 0.4, 0.005)),
                                'h_ratios': list(np.arange(0.05, 0.4, 0.005)),
                                's_ratios': list(np.arange(0.05, 0.4, 0.005)),
-                               '_ratios': {'w_h_s_ratio': {'w_h_s_ratio': None, 'min_ratio': None}}
+                               '_ratios': {'w_h_s_ratio': None}
                               },
                     'payment_screen': {
                                  'd_ratios': list(np.arange(0.02, 0.2, 0.005)),
                                  'h_ratios': list(np.arange(0.02, 0.2, 0.005)),
                                  's_ratios': list(np.arange(0.02, 0.2, 0.005)),
-                                 '_ratios': {'w_h_s_ratio': {'w_h_s_ratio': None, 'min_ratio': None}}
+                                 '_ratios': {'w_h_s_ratio': None}
                                              }
 }
 min_ranges = list(zip(list(np.arange(0, 65, 5)[1:]), list(np.arange(0, 60, 5)), list(range(12))))
@@ -40,7 +40,7 @@ weeks = list(range(24))[0:5]
 
 _row = {'day': None, 'hour': None, 'store': None,
         'ratios': None, 'login': None,
-        'basket': None, 'payment': None}
+        'basket': None, 'payment_screen': None}
 
 ### hyper parameters
 parameters = {
@@ -65,6 +65,6 @@ model_params = {
 }
 
 split_ratio = 0.2
-lstm_features = ['basket', 'login', 'payment', 'ratio']
+lstm_features = ['basket', 'login', 'payment_screen', 'ratios']
 output = ['close']
 cat_features = ['hour', 'day']

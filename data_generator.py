@@ -15,12 +15,12 @@ def get_final_ratio(r, p):
 
 def promo_open_close_decide(row):
     close = 0
-    if row['login'] < 0.76 and row['basket'] < 0.6 and row['payment'] < 0.4 and row['ratio'] < 0.4:
+    if row['login'] < 0.76 and row['basket'] < 0.6 and row['payment_screen'] < 0.4 and row['ratios'] < 0.4:
         close = 1
-    if row['ratio'] > 0.9 or row['payment'] > 0.9:
+    if row['ratios'] > 0.9 or row['payment_screen'] > 0.9:
         close = 1
 
-    if row['score'] > 0.15 and row['ratio'] > 0.8:
+    if row['score'] > 0.15 and row['ratios'] > 0.8:
         close = 1
     return close
 
@@ -52,10 +52,10 @@ def ratio_calculation(metrics, ratios):
 
 
 def weekly_updating(data, value, w):
-    for f in ['ratio', 'login', 'basket', 'payment']:
+    for f in ['ratios', 'login', 'basket', 'payment_screen']:
         data[f] = data.apply(lambda row: row[f] + (row[f] * value) if row[f] + (row[f] * value) >= 0 else row[f], axis=1)
     data['week'] = w
-    return open_close(data)
+    return open_close(pd.DataFrame(data))
 
 def get_week_of_updating_ratio():
     if np.random.random() > 0.3:
@@ -77,7 +77,6 @@ class RandomDataGenerator:
 
     def get_busy_ratios(self):
         for f in self.model_features:
-            print(f)
             count = 0
             for r in self.model_features[f]:
                 if r != '_ratios':
@@ -86,7 +85,6 @@ class RandomDataGenerator:
                                                       for i in self.metrics[self.ratio_metrics[count]]]))
 
                 count += 1
-        print("ok")
 
     def get_patterns(self):
         for i in range(10):
@@ -94,20 +92,20 @@ class RandomDataGenerator:
 
     def get_day_store_hour_ratios(self, w, h, s):
         for f in self.model_features:
-            self.model_features[f]['_ratio']['w_h_s_ratios'] = ratio_calculation([w, h, s], self.busy_ratios)
+            self.model_features[f]['_ratios']['w_h_s_ratios'] = ratio_calculation([w, h, s], self.busy_ratios)
 
     def get_min_ratios(self, pattern, w, h, s):
         self.sample['day'], self.sample['hour'], self.sample['store'] = w, h, s
         for f in self.model_features:
-            self.sample[f] = get_final_ratio(random.sample(self.model_features[f]['_ratio']['w_h_s_ratios'], 1)[0], pattern)
+            self.sample[f] = get_final_ratio(random.sample(self.model_features[f]['_ratios']['w_h_s_ratios'], 1)[0], pattern)
         self.store_data.append(self.sample)
 
     def week_of_updated_ratios(self, w):
         self.store_data = weekly_updating(pd.DataFrame(self.store_data), get_week_of_updating_ratio(), w)
-        self.store_week_data += self.store_data
+        self.store_week_data += self.store_data.to_dict('results')
 
     def write_store_week_to_csv(self, s):
-        open_close(self.store_data).to_csv("data/availability_ratios_" + s + ".csv", index=False)
+        open_close(pd.DataFrame(self.store_data)).to_csv("data/availability_ratios_" + s + ".csv", index=False)
 
     def read_store_week_from_csv(self, s):
         self.store_data = pd.read_csv("data/availability_ratios_" + s + ".csv")
@@ -115,22 +113,22 @@ class RandomDataGenerator:
     def calculate_week_of_availabilities(self):
         self.get_patterns()
         self.get_busy_ratios()
-        for s in self.metrics[self.ratio_metrics[1]]:
+        for s in self.metrics[self.ratio_metrics[2]]:
             self.store_data = []
-            for h in self.metrics[self.ratio_metrics[2]]:
+            for h in self.metrics[self.ratio_metrics[1]]:
                 for w in self.metrics[self.ratio_metrics[0]]:
                     self.get_day_store_hour_ratios(w, h, s)
                     _patterns = random.sample(self.patterns, 1)[0]
                     for m in self.metrics['mins']:
                         _min_range_idx = list(map(lambda x: x[2], list(filter(lambda x: x[0] > m >= x[1], min_ranges))))[0]
                         _p = _patterns[_min_range_idx]
-                        self.get_min_ratios(self, _p, w, h, s)
+                        self.get_min_ratios(_p, w, h, s)
             self.write_store_week_to_csv(s)
 
     def generate_random_data(self):
         self.calculate_week_of_availabilities()
-        for s in self.metrics[self.ratio_metrics[1]]:
-            self.read_store_week_from_csv(self, s)
+        for s in self.metrics[self.ratio_metrics[2]]:
+            self.read_store_week_from_csv(s)
             for week in weeks:
                 self.week_of_updated_ratios(week)
             self.write_store_week_to_csv(s)
