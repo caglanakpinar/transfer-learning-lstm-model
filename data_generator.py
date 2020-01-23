@@ -131,6 +131,7 @@ class RandomDataGenerator:
             self.read_store_week_from_csv(s)
             for week in weeks:
                 self.week_of_updated_ratios(week)
+            self.store_data = self.store_week_data
             self.write_store_week_to_csv(s)
 
 
