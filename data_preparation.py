@@ -27,7 +27,7 @@ def compute_one_hot_encoding(df, cat_features, is_droping):
 
 class DataPreparation:
     def __init__(self):
-        self.files_prepared_data = listdir(os.path.abspath("data/"))
+        self.files_prepared_data = listdir(os.path.abspath(""))
         self.metrics = metrics
         self.ratio_metrics = ['days', 'hours', 'stores']
         self.parameters = parameters
@@ -78,7 +78,7 @@ class DataPreparation:
         self._x_train = compute_one_hot_encoding(pd.DataFrame(self._x_train).rename(columns={0: f}), f, True).values
 
     def generate_data_for_model(self):
-        for f in self.lstm_features + self.cat_features + self.output:
+        for f in self.lstm_features + self.output:
             print("feature :", f, "*" * 20)
             for s in self.metrics[self.ratio_metrics[2]]:
                 print("store :", s)
@@ -89,7 +89,7 @@ class DataPreparation:
                     for w in self.weeks:
                         for d in self.days:
                             for h in self.hours:
-                                self.query_data(w, d, h)
+                                self.query_data(w, d, h, f)
                                 self.data_preparation(f)
 
                     if f in self.lstm_features:
