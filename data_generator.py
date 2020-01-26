@@ -17,10 +17,10 @@ def promo_open_close_decide(row):
     close = 0
     if row['login'] < 0.76 and row['basket'] < 0.6 and row['payment_screen'] < 0.4 and row['ratios'] < 0.4:
         close = 1
-    if row['ratios'] > 0.9 or row['payment_screen'] > 0.9:
+    if row['ratios'] > 0.8 or row['payment_screen'] > 0.6:
         close = 1
 
-    if row['score'] > 0.15 and row['ratios'] > 0.8:
+    if row['score'] > 0.15 and row['ratios'] > 0.6:
         close = 1
     return close
 
@@ -57,11 +57,13 @@ def weekly_updating(data, value, w):
     data['week'] = w
     return open_close(pd.DataFrame(data))
 
+
 def get_week_of_updating_ratio():
     if np.random.random() > 0.3:
         return random.sample(list(np.arange(0.02, 0.04, 0.01)), 1)[0]
     else:
         return random.sample(list(np.arange(0.02, 0.04, 0.01)), 1)[0] * -1
+
 
 class RandomDataGenerator:
     def __init__(self):

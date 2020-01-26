@@ -4,7 +4,7 @@ import os
 from os import listdir
 
 from utils import get_files
-from configs import metrics, parameters, model_params, lstm_features, cat_features, output, split_ratio
+from configs import metrics, parameters, model_params, lstm_features, cat_features, target, split_ratio
 from data_access import data_read_write_to_json
 
 
@@ -27,14 +27,14 @@ def compute_one_hot_encoding(df, cat_features, is_droping):
 
 class DataPreparation:
     def __init__(self):
-        self.files_prepared_data = listdir(os.path.abspath(""))
+        self.files_prepared_data = listdir(os.path.abspath("data/"))
         self.metrics = metrics
         self.ratio_metrics = ['days', 'hours', 'stores']
         self.parameters = parameters
         self.model_params = model_params
         self.lstm_features = lstm_features
         self.cat_features = cat_features
-        self.output = output
+        self.output = target
         self.file_name = None
         self.feature_dict = {}
         self.data = []
@@ -93,7 +93,7 @@ class DataPreparation:
                                 self.data_preparation(f)
 
                     if f in self.lstm_features:
-                        data_read_write_to_json(self.file_name,
+                        data_read_write_to_json("data/"+self.file_name,
                                                 {'x_train': self._x_train.reshape((self._x_train.shape[0],
                                                                                    self._x_train.shape[1], 1)).tolist(),
                                                  'y_train': self._y_train.reshape((self._x_train.shape[0], 1)).tolist()
@@ -101,12 +101,13 @@ class DataPreparation:
                                                 True)
                     if f in self.cat_features:
                         self.compute_one_hot_encoding(f)
-                        data_read_write_to_json(self.file_name,
+                        data_read_write_to_json("data/"+self.file_name,
                                                 {'x_train': self._x_train},
                                                 True)
-                    if f == self.output:
-                        data_read_write_to_json(self.file_name,
-                                                {'y_train': self._x_train.rename(columns={0: f})[[f]].values.tolist()},
+                    if f in self.output:
+                        data_read_write_to_json("data/"+self.file_name,
+                                                {'y_train': pd.DataFrame(self._x_train).rename(columns={0: f})[[f]].values.tolist()},
                                                 True)
+
 
 
