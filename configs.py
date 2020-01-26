@@ -4,7 +4,7 @@ debug_run = True
 metrics = {
             'days': list(range(1, 8)),
             'hours': list(range(24)),
-            'stores': ['store_' + str(i) for i in range(1, 3)],
+            'locations': ['location_' + str(i) for i in range(1, 3)],
             'mins': list(range(60))
 }
 
@@ -39,7 +39,7 @@ min_ranges = list(zip(list(np.arange(0, 65, 5)[1:]), list(np.arange(0, 60, 5)), 
 pattern_ratios = list(np.arange(0.05, 1, 0.1) * -1) + list(np.arange(0.05, 1, 0.1)) + [0] * 2
 weeks = list(range(24))[0:5]
 
-_row = {'day': None, 'hour': None, 'store': None,
+_row = {'day': None, 'hour': None, 'location': None,
         'ratios': None, 'login': None,
         'basket': None, 'payment_screen': None}
 

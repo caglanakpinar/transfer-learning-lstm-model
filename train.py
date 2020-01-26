@@ -33,7 +33,7 @@ class Train:
     def __init__(self):
         self.model_params = []
         self.default_model_params = default_model_params
-        self.stores = metrics['stores']
+        self.locations = metrics['locations']
         self.lstm_features = lstm_features
         self.outputs = []
         self.target = target
@@ -118,8 +118,8 @@ class Train:
         with open("models/model_{}.json".format(s), "w") as json_file:
             json_file.write(self.model.to_json())
 
-    def compute_stores_models(self):
-        for s in self.stores:
+    def compute_locations_models(self):
+        for s in self.locations:
             print(s, " model train ", "*" * 20)
             self.model_init()
             self.model_logs(s)

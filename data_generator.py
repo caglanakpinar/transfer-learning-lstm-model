@@ -68,7 +68,7 @@ def get_week_of_updating_ratio():
 class RandomDataGenerator:
     def __init__(self):
         self.metrics = metrics
-        self.ratio_metrics = ['days', 'hours', 'stores']
+        self.ratio_metrics = ['days', 'hours', 'locations']
         self.model_features = model_features
         self.busy_ratios = []
         self.patterns = []

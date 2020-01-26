@@ -29,7 +29,7 @@ class DataPreparation:
     def __init__(self):
         self.files_prepared_data = listdir(os.path.abspath("data/"))
         self.metrics = metrics
-        self.ratio_metrics = ['days', 'hours', 'stores']
+        self.ratio_metrics = ['days', 'hours', 'locations']
         self.parameters = parameters
         self.model_params = model_params
         self.lstm_features = lstm_features
@@ -49,7 +49,7 @@ class DataPreparation:
         for f in self.lstm_features + self.cat_features + self.output:
             self.feature_dict[f] = {}
 
-    def get_stores_data(self, s):
+    def get_locations_data(self, s):
         self.data = pd.read_csv("data/availability_ratios_{}.csv".format(s))
         self.weeks = list(self.data['week'].unique())
         self.days = list(self.data['day'].unique())
@@ -84,7 +84,7 @@ class DataPreparation:
                 print("store :", s)
                 self.file_name = "train_data_{}_{}.json".format(f, s)
                 if self.file_name not in self.files_prepared_data:
-                    self.get_stores_data(s)
+                    self.get_locations_data(s)
                     self.get_train_weeks()
                     for w in self.weeks:
                         for d in self.days:

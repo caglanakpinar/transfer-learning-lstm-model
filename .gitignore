@@ -4,9 +4,6 @@
 *.iml
 *.pyc
 *.csv
-.DS_Store
-.DS_Store
-.DS_Store
 *.json
 *.local
 *.profile-empty
