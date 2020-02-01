@@ -9,7 +9,7 @@ def get_data():
     files_prepared_data = listdir(os.path.abspath("data"))
     if files_prepared_data == []:
       print(" Couldn't find any data at data/. Random data generator will be started!!!")
-      random_data_generator = RandomDataGenerator()
+      random_data_generator = RandomDataGenerator()  # this generates randomly included target data set
       random_data_generator.generate_random_data()
 
 
