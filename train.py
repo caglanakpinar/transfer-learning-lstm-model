@@ -12,6 +12,8 @@ tf.keras.callbacks
 import talos
 import numpy as np
 import datetime
+import os
+from os import listdir
 
 from configs import metrics, lstm_features, target, hyper_parameters, default_model_params, debug_run
 from data_access import data_read_write_to_json
@@ -31,6 +33,7 @@ def parameter_optimization_model_train(x_train, y_train, x_test, y_test, params)
 
 class Train:
     def __init__(self):
+        self.model_paths = [file for file in listdir(os.path.abspath("models/")) if file.split(".")[1] == 'json']
         self.model_params = []
         self.default_model_params = default_model_params
         self.locations = metrics['locations']
@@ -119,17 +122,21 @@ class Train:
             json_file.write(self.model.to_json())
 
     def compute_locations_models(self):
+
         for s in self.locations:
-            print(s, " model train ", "*" * 20)
-            self.model_init()
-            self.model_logs(s)
-            for f in self.lstm_features:
-                self.get_train_data(f, s)
-                self.reshape_inputs_outputs(f)
-                self.lstm_features_network_build_process(s, f)
-            self.multi_layer_perceptron_for_merged_lstm()
-            for f in self.target:
-                self.get_train_data(f, s)
-                self.output_dict['close'] = np.array(self.data['y_train'])
-            self.model_compute()
-            self.write_keras_model_to_json(s)
+            if "models/model_{}.json".format(s) not in self.model_paths:
+                print(s, " model train ", "*" * 20)
+                self.model_init()
+                self.model_logs(s)
+                for f in self.lstm_features:
+                    self.get_train_data(f, s)
+                    self.reshape_inputs_outputs(f)
+                    self.lstm_features_network_build_process(s, f)
+                self.multi_layer_perceptron_for_merged_lstm()
+                for f in self.target:
+                    self.get_train_data(f, s)
+                    self.output_dict['close'] = np.array(self.data['y_train'])
+                self.model_compute()
+                self.write_keras_model_to_json(s)
+            else:
+                print(s + " model already have trained! Check models folder.")

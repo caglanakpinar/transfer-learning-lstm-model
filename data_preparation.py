@@ -81,7 +81,7 @@ class DataPreparation:
         for f in self.lstm_features + self.output:
             print("feature :", f, "*" * 20)
             for s in self.metrics[self.ratio_metrics[2]]:
-                print("store :", s)
+                print("location :", s)
                 self.file_name = "train_data_{}_{}.json".format(f, s)
                 if self.file_name not in self.files_prepared_data:
                     self.get_locations_data(s)
